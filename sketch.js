@@ -1,16 +1,18 @@
 let circles = [];
+let gravity = 0.2;
 
 function setup() {
   createCanvas(600, 400);
   ellipseMode(RADIUS);
   
-  circles.push(new Circle(300, 200, 20, 2, 3)); // starting example
+  circles.push(new Circle(300, 200, 20, 2, 0));
 }
 
 function draw() {
   background(220);
   
   for (let c of circles) {
+    c.applyGravity();
     c.move();
     c.display();
   }
@@ -25,6 +27,10 @@ class Circle {
     this.dy = dy;
   }
   
+  applyGravity() {
+    this.dy += gravity;
+  }
+  
   move() {
     this.x += this.dx;
     this.y += this.dy;
@@ -36,3 +42,4 @@ class Circle {
     circle(this.x, this.y, this.r);
   }
 }
+
