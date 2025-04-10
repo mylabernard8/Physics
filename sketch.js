@@ -1,5 +1,6 @@
 let circles = [];
 let gravity = 0.2;
+let windForce = 0;
 
 function setup() {
   createCanvas(600, 400);
@@ -21,12 +22,19 @@ function draw() {
   
   for (let c of circles) {
     c.applyGravity();
+    c.applyWind();
     c.move();
     c.checkEdges();
     c.display();
   }
   
   checkCollisions();
+}
+
+function keyPressed() {
+  if (key === ' ') {
+    windForce = random(-0.5, 0.5);
+  }
 }
 
 function checkCollisions() {
@@ -36,7 +44,6 @@ function checkCollisions() {
       let c2 = circles[j];
       let d = dist(c1.x, c1.y, c2.x, c2.y);
       if (d < c1.r + c2.r) {
-        // Basic bounce: swap dx and dy
         let tempDx = c1.dx;
         let tempDy = c1.dy;
         c1.dx = c2.dx;
@@ -59,6 +66,11 @@ class Circle {
   
   applyGravity() {
     this.dy += gravity;
+  }
+  
+  applyWind() {
+    this.dx += windForce;
+    windForce = 0; // one-time gust
   }
   
   move() {
