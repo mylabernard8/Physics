@@ -14,6 +14,7 @@ function draw() {
   for (let c of circles) {
     c.applyGravity();
     c.move();
+    c.checkEdges();
     c.display();
   }
 }
@@ -34,6 +35,25 @@ class Circle {
   move() {
     this.x += this.dx;
     this.y += this.dy;
+  }
+  
+  checkEdges() {
+    if (this.x - this.r < 0) {
+      this.x = this.r;
+      this.dx *= -1;
+    }
+    if (this.x + this.r > width) {
+      this.x = width - this.r;
+      this.dx *= -1;
+    }
+    if (this.y - this.r < 0) {
+      this.y = this.r;
+      this.dy *= -1;
+    }
+    if (this.y + this.r > height) {
+      this.y = height - this.r;
+      this.dy *= -1;
+    }
   }
   
   display() {
