@@ -1,18 +1,21 @@
 let circles = [];
-let gravity = 0.2;
+let gravity;
 let windForce = 0;
 
 function setup() {
   createCanvas(600, 400);
   ellipseMode(RADIUS);
   
+  gravity = createVector(0, 0.2);
+
   for (let i = 0; i < 5; i++) {
     circles.push(new Circle(
-      random(50, width-50),
-      random(50, height-50),
+      random(50, width - 50),
+      random(50, height - 50),
       20,
       random(-2, 2),
-      random(-2, 2)
+      random(-2, 2),
+      random(0.5, 2) // mass
     ));
   }
 }
@@ -21,13 +24,16 @@ function draw() {
   background(220);
   
   for (let c of circles) {
-    c.applyGravity();
-    c.applyWind();
-    c.move();
+    c.applyForce(gravity);
+    if (windForce !== 0) {
+      c.applyForce(createVector(windForce, 0));
+    }
+    c.update();
     c.checkEdges();
     c.display();
   }
-  
+
+  windForce = 0; // one-time gust
   checkCollisions();
 }
 
@@ -39,68 +45,18 @@ function keyPressed() {
 
 function checkCollisions() {
   for (let i = 0; i < circles.length; i++) {
-    for (let j = i+1; j < circles.length; j++) {
+    for (let j = i + 1; j < circles.length; j++) {
       let c1 = circles[i];
       let c2 = circles[j];
-      let d = dist(c1.x, c1.y, c2.x, c2.y);
-      if (d < c1.r + c2.r) {
-        let tempDx = c1.dx;
-        let tempDy = c1.dy;
-        c1.dx = c2.dx;
-        c1.dy = c2.dy;
-        c2.dx = tempDx;
-        c2.dy = tempDy;
+      let d = p5.Vector.dist(c1.position, c2.position);
+      if (d < c1.radius + c2.radius) {
+        // Swap velocities for now
+        let temp = c1.velocity.copy();
+        c1.velocity = c2.velocity.copy();
+        c2.velocity = temp;
       }
     }
   }
 }
 
-class Circle {
-  constructor(x, y, r, dx, dy) {
-    this.x = x;
-    this.y = y;
-    this.r = r;
-    this.dx = dx;
-    this.dy = dy;
-  }
-  
-  applyGravity() {
-    this.dy += gravity;
-  }
-  
-  applyWind() {
-    this.dx += windForce;
-    windForce = 0; // one-time gust
-  }
-  
-  move() {
-    this.x += this.dx;
-    this.y += this.dy;
-  }
-  
-  checkEdges() {
-    if (this.x - this.r < 0) {
-      this.x = this.r;
-      this.dx *= -1;
-    }
-    if (this.x + this.r > width) {
-      this.x = width - this.r;
-      this.dx *= -1;
-    }
-    if (this.y - this.r < 0) {
-      this.y = this.r;
-      this.dy *= -1;
-    }
-    if (this.y + this.r > height) {
-      this.y = height - this.r;
-      this.dy *= -1;
-    }
-  }
-  
-  display() {
-    fill(100);
-    noStroke();
-    circle(this.x, this.y, this.r);
-  }
-}
 
