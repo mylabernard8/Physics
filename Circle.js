@@ -69,7 +69,6 @@ function checkCollisions() {
     }
   }
 }
-
 class Circle {
   constructor(x, y, r, vx, vy, m = 1) {
     this.position = createVector(x, y);
@@ -88,7 +87,7 @@ class Circle {
   update() {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
-    this.acceleration.mult(0); // Reset acceleration
+    this.acceleration.mult(0); // Reset acceleration every frame
   }
 
   checkEdges() {
@@ -106,7 +105,7 @@ class Circle {
     }
     if (this.position.y + this.radius > height) {
       this.position.y = height - this.radius;
-      this.velocity.y *= -0.9; // a little bounce damping
+      this.velocity.y *= -0.9; // Optional damping
     }
   }
 
@@ -116,4 +115,5 @@ class Circle {
     circle(this.position.x, this.position.y, this.radius * 2);
   }
 }
+
 
