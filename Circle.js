@@ -55,12 +55,12 @@ function checkCollisions() {
       let minDist = c1.radius + c2.radius;
 
       if (distance < minDist) {
-        // Simple elastic collision: swap velocities
+        // Swap velocities (basic elastic collision)
         let temp = c1.velocity.copy();
         c1.velocity = c2.velocity.copy();
         c2.velocity = temp;
 
-        // Push them apart to avoid sticking
+        // Push circles apart so they don't overlap
         let overlap = minDist - distance;
         let correction = distVec.copy().normalize().mult(overlap / 2);
         c1.position.add(correction);
@@ -80,6 +80,7 @@ class Circle {
   }
 
   applyForce(force) {
+    // F = ma → a = F / m
     let f = p5.Vector.div(force, this.mass);
     this.acceleration.add(f);
   }
@@ -105,7 +106,7 @@ class Circle {
     }
     if (this.position.y + this.radius > height) {
       this.position.y = height - this.radius;
-      this.velocity.y *= -0.9; // damping
+      this.velocity.y *= -0.9; // a little bounce damping
     }
   }
 
