@@ -21,7 +21,7 @@ function setup() {
 function draw() {
   background(220);
 
-
+  // Draw the liquid area
   fill(180, 220, 255, 100);
   noStroke();
   rect(0, height / 2, width, height / 2);
@@ -61,12 +61,23 @@ function keyPressed() {
   }
 }
 
-//feature of wind gust
 function mouseDragged() {
   let wind = createVector((mouseX - pmouseX) * 0.05, 0);
   for (let c of circles) {
     c.applyForce(wind);
   }
+}
+
+// clicking to add new circle
+function mousePressed() {
+  let newCircle = new Circle(
+    mouseX,
+    mouseY,
+    20,
+    random(-2, 2),
+    random(-2, 2)
+  );
+  circles.push(newCircle);
 }
 
 function checkCollisions() {
@@ -92,3 +103,5 @@ function checkCollisions() {
     }
   }
 }
+
+
