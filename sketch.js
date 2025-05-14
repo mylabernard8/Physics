@@ -21,7 +21,7 @@ function setup() {
 function draw() {
   background(220);
 
-  // Draw the liquid area
+
   fill(180, 220, 255, 100);
   noStroke();
   rect(0, height / 2, width, height / 2);
@@ -61,7 +61,7 @@ function keyPressed() {
   }
 }
 
-// FEATURE 1: Apply wind based on mouse dragging
+//feature of wind gust
 function mouseDragged() {
   let wind = createVector((mouseX - pmouseX) * 0.05, 0);
   for (let c of circles) {
@@ -92,49 +92,3 @@ function checkCollisions() {
     }
   }
 }
-
-// Assuming you have this class already
-class Circle {
-  constructor(x, y, r, vx, vy) {
-    this.position = createVector(x, y);
-    this.velocity = createVector(vx, vy);
-    this.acceleration = createVector(0, 0);
-    this.radius = r;
-  }
-
-  applyForce(force) {
-    this.acceleration.add(force);
-  }
-
-  update() {
-    this.velocity.add(this.acceleration);
-    this.position.add(this.velocity);
-    this.acceleration.mult(0);
-  }
-
-  checkEdges() {
-    if (this.position.x < this.radius) {
-      this.position.x = this.radius;
-      this.velocity.x *= -1;
-    } else if (this.position.x > width - this.radius) {
-      this.position.x = width - this.radius;
-      this.velocity.x *= -1;
-    }
-
-    if (this.position.y < this.radius) {
-      this.position.y = this.radius;
-      this.velocity.y *= -1;
-    } else if (this.position.y > height - this.radius) {
-      this.position.y = height - this.radius;
-      this.velocity.y *= -1;
-    }
-  }
-
-  display() {
-    fill(100, 150, 255);
-    stroke(0);
-    strokeWeight(1);
-    ellipse(this.position.x, this.position.y, this.radius, this.radius);
-  }
-}
-
