@@ -30,7 +30,7 @@ function draw() {
     // Gravity
     c.applyForce(gravity);
 
-    // Wind (one-time gust)
+    // Wind (one-time gust from spacebar)
     if (windForce !== 0) {
       c.applyForce(createVector(windForce, 0));
     }
@@ -61,6 +61,14 @@ function keyPressed() {
   }
 }
 
+// FEATURE 1: Apply wind based on mouse dragging
+function mouseDragged() {
+  let wind = createVector((mouseX - pmouseX) * 0.05, 0);
+  for (let c of circles) {
+    c.applyForce(wind);
+  }
+}
+
 function checkCollisions() {
   for (let i = 0; i < circles.length; i++) {
     for (let j = i + 1; j < circles.length; j++) {
@@ -82,6 +90,51 @@ function checkCollisions() {
         c2.position.sub(correction);
       }
     }
+  }
+}
+
+// Assuming you have this class already
+class Circle {
+  constructor(x, y, r, vx, vy) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(vx, vy);
+    this.acceleration = createVector(0, 0);
+    this.radius = r;
+  }
+
+  applyForce(force) {
+    this.acceleration.add(force);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  checkEdges() {
+    if (this.position.x < this.radius) {
+      this.position.x = this.radius;
+      this.velocity.x *= -1;
+    } else if (this.position.x > width - this.radius) {
+      this.position.x = width - this.radius;
+      this.velocity.x *= -1;
+    }
+
+    if (this.position.y < this.radius) {
+      this.position.y = this.radius;
+      this.velocity.y *= -1;
+    } else if (this.position.y > height - this.radius) {
+      this.position.y = height - this.radius;
+      this.velocity.y *= -1;
+    }
+  }
+
+  display() {
+    fill(100, 150, 255);
+    stroke(0);
+    strokeWeight(1);
+    ellipse(this.position.x, this.position.y, this.radius, this.radius);
   }
 }
 
